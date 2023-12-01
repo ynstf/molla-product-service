@@ -1,7 +1,7 @@
 from .models import Product, Category
 from rest_framework.response import Response 
 from rest_framework.decorators import api_view
-from .serializers import ProductSerializer
+from .serializers import ProductSerializer, CategorySerializer
 import json
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
@@ -15,6 +15,11 @@ def product_list(request):
 
     products = Product.objects.all()
     paginator = Paginator(products, items_per_page)
+
+    
+    search = request.GET.get("search") if request.GET.get("search") != None else ''
+
+    #print(page,search)
 
     try:
         paginated_products = paginator.page(page)
@@ -34,17 +39,25 @@ def product_list(request):
         'previous_page': paginated_products.previous_page_number() if paginated_products.has_previous() else None,
         'results': serializer.data,
     }
-
     return Response(response_data)
-
-""" products = Product.objects.all()
-    serializer = ProductSerializer(products, many=True)
-    return Response(serializer.data)"""
 
 @api_view(['GET'])
 def product_show(request,pk):
     product = Product.objects.get(id=pk)
     serializer = ProductSerializer(product)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def product_categories(request,pk):
+    product = Product.objects.get(id=pk)
+    categories_of_product = product.category.all()
+    serializer = CategorySerializer(categories_of_product, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def all_categories(request):
+    categories = Category.objects.all()
+    serializer = CategorySerializer(categories, many=True)
     return Response(serializer.data)
 
 @api_view(['POST'])
