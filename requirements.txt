@@ -7,3 +7,4 @@ mysqlclient
 django-dotenv
 psycopg2-binary
 Pillow
+django-cloudinary-storage
