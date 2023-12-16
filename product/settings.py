@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import cloudinary_storage
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -36,10 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'cloudinary_storage',
     'django.contrib.staticfiles',
     'base',
     'rest_framework',
     'corsheaders',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -76,16 +80,15 @@ WSGI_APPLICATION = 'product.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / '../db.sqlite3',
     }
 }
-"""
-#postgres database
 
+#postgres database
+"""
 DB_DATABASE = 'igxvggzn'
 DB_USERNAME = 'igxvggzn'
 DB_PASSWORD = 'd1tAH70iAtxdJYrQuPSBICRvgcfhCdHs'
@@ -100,7 +103,7 @@ DATABASES = {
             'HOST': DB_HOST,
             'PORT': 5432, #default port you don't need to mention in docker-compose
             }
-}
+}"""
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -140,9 +143,19 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+MEDIA_URL ='/media/'
+MEDIA_ROOT =os.path.join(BASE_DIR,"media")
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dbhawzisa',
+    'API_KEY': '874379634442717',
+    'API_SECRET': os.environ.get('api_secret')
+}
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
